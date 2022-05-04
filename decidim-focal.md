@@ -132,26 +132,25 @@ At this point, you should be able to run the command `rbenv install -l` that wil
 ```bash
 decidim@decidim:~$ rbenv install -l
 Available versions:
-  2.5.8
-  2.6.6
-  2.7.1
+  2.6.10
+  2.7.6
   ...
   rbx-5.0
-  truffleruby-20.1.0
-  truffleruby+graalvm-20.1.0
+  truffleruby-22.1.0
+  truffleruby+graalvm-22.1.0
 ```
 
-We are going to use version 2.6.3, so run these commands:
+We are going to use version 2.7.6, so run these commands:
 
 ```bash
-rbenv install 2.6.3
-rbenv global 2.6.3
+rbenv install 2.7.6
+rbenv global 2.7.6
 ```
 Now you can verify we have everything in order by running the command `ruby -v`:
 
 ```bash
 decidim@decidim:~$ ruby -v
-ruby 2.6.3p62 (2019-04-16 revision 67580) [x86_64-linux]
+ruby 2.7.6p219 (2022-04-12 revision c9c2245c0a) [x86_64-linux]
 ```
 
 If everything is ok, we need to setup Gems, the package manager for Ruby, after that we will be ready to install Decidim.
@@ -167,8 +166,7 @@ Again, you can test if everything is ok so far by running the command `gem env h
 
 ```bash
 decidim@decidim:~$ gem env home
-/home/decidim/.rbenv/versions/2.6.3/lib/ruby/gems/2.6.0
-```
+/home/decidim/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0
 
 Great, now we have the basic server setup in place, next step is to install Decidim.
 
@@ -180,7 +178,14 @@ Decidim uses Postgresql as a SQL database, we are going to install it in this ma
 sudo apt install -y postgresql libpq-dev
 ```
 
-We also need NodeJS as a dependency for the decidim generator, in ubuntu 20.04 it's fine to install from the repositories (we also install imageMagick and a library needed since version 0.17, used by Decidim):
+We also need NodeJS as a dependency for the decidim generator, in ubuntu 20.04 we need to install it from [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md)
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+We also install imageMagick and a library needed since version 0.17, used by Decidim:
 
 ```bash
 sudo apt install -y nodejs imagemagick libicu-dev
@@ -250,22 +255,28 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-gem "decidim", "0.21.0"
-# gem "decidim-consultations", "0.21.0"
-# gem "decidim-initiatives", "0.21.0"
+gem "decidim", "0.26.1"
+# gem "decidim-conferences", "0.26.1"
+# gem "decidim-consultations", "0.26.1"
+# gem "decidim-elections", "0.26.1"
+# gem "decidim-initiatives", "0.26.1"
+# gem "decidim-templates", "0.26.1"
 
-gem "bootsnap", "~> 1.4"
+gem "bootsnap", "~> 1.3"
 
-gem "puma", "~> 4.3"
-gem "uglifier", "~> 4.1"
+gem "puma", ">= 5.0.0"
 
-gem "faker", "~> 1.9"
+gem "faker", "~> 2.14"
+
+gem "wicked_pdf", "~> 2.1"
 
 gem "figaro"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
-  gem "decidim-dev", "0.21.0"
+
+  gem "brakeman"
+  gem "decidim-dev", "0.26.1"
 end
 
 group :development do
@@ -273,7 +284,7 @@ group :development do
   gem "listen", "~> 3.1"
   gem "spring", "~> 2.0"
   gem "spring-watcher-listen", "~> 2.0"
-  gem "web-console", "~> 3.5"
+  gem "web-console", "~> 4.0"
 end
 
 group :production do
@@ -330,6 +341,7 @@ echo "/config/application.yml" >> ~/decidim-app/.gitignore
 > ```bash
 > cd ~/decidim-app
 > git init .
+> git add .
 > git commit -m "Initial commit. Generated with Decidim 0.X https://decidim.org"
 > ```
 > - After that you should create commits everytime you make a relevant change.
@@ -375,7 +387,7 @@ bin/rails console -e production
 A new prompt will appear:
 
 ```
-Loading production environment (Rails 5.2.0)
+Loading production environment (Rails 6.0.4.1)
 irb(main):001:0>
 ```
 
