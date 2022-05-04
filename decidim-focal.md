@@ -167,6 +167,7 @@ Again, you can test if everything is ok so far by running the command `gem env h
 ```bash
 decidim@decidim:~$ gem env home
 /home/decidim/.rbenv/versions/2.7.6/lib/ruby/gems/2.7.0
+```
 
 Great, now we have the basic server setup in place, next step is to install Decidim.
 
@@ -181,14 +182,17 @@ sudo apt install -y postgresql libpq-dev
 We also need NodeJS as a dependency for the decidim generator, in ubuntu 20.04 we need to install it from [NodeSource](https://github.com/nodesource/distributions/blob/master/README.md)
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo apt-get install -y nodejs
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install -y yarn
 ```
 
 We also install imageMagick and a library needed since version 0.17, used by Decidim:
 
 ```bash
-sudo apt install -y nodejs imagemagick libicu-dev
+sudo apt install -y imagemagick libicu-dev
 ```
 Now, we use the decidim generator to create our application. Note that you still need the package `libpg-dev` in order tu run the decidim generator (in case you install postgress in another server).
 
@@ -342,7 +346,7 @@ echo "/config/application.yml" >> ~/decidim-app/.gitignore
 > cd ~/decidim-app
 > git init .
 > git add .
-> git commit -m "Initial commit. Generated with Decidim 0.X https://decidim.org"
+> git commit -m "Initial commit. Generated with Decidim https://decidim.org"
 > ```
 > - After that you should create commits everytime you make a relevant change.
 
@@ -360,8 +364,6 @@ The response to the second command should look something like this (quite long),
 decidim@decidim:~/decidim-app$ bin/rails db:create RAILS_ENV=production
 Created database 'decidim_prod'
 decidim@decidim:~/decidim-app$ bin/rails assets:precompile db:migrate RAILS_ENV=production
-Yarn executable was not detected in the system.
-Download Yarn at https://yarnpkg.com/en/docs/install
 I, [2018-07-16T13:10:56.442340 #32755]  INFO -- : Writing /home/decidim/decidim-app/public/assets/decidim/api/docs-3ca85e11b4f676d392a15494a0eb66962aaf08382c60a09ae3f1d7a6806a59ae.js
 
 ...
